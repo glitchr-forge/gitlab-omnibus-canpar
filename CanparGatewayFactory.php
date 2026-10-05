@@ -7,7 +7,6 @@ use Omnibus\Canpar\Action\RatingAction;
 use Omnibus\Canpar\Action\ShippingAction;
 use Omnibus\Canpar\Action\TrackingAction;
 use Omnibus\Config;
-use Omnibus\Exception\InvalidConfigException;
 use Omnibus\GatewayFactory;
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -31,7 +30,7 @@ final class CanparGatewayFactory extends GatewayFactory
             'omnibus.required_options' => ['user_id', 'password', 'shipper_number'],
             'sandbox' => false,
             'omnibus.api' => function (Config $c) {
-                $http = $this->http ?? (class_exists(HttpClient::class) ? HttpClient::create() : throw new InvalidConfigException('The "canpar" gateway needs symfony/http-client.'));
+                $http = $this->http ?? HttpClient::create();
 
                 return new Api($http, (string) $c['user_id'], (string) $c['password'], (string) $c['shipper_number'], (bool) $c['sandbox']);
             },
